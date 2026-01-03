@@ -1,0 +1,22 @@
+[project]
+name = "foptimizer"
+version = "1.0.0"
+description = "A Source Engine asset optimization tool for models, textures, and audio."
+readme = "README.md"
+authors = [
+    { name = "foxington" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "sourcepp",
+    "pyoxipng",
+    "numpy",
+    "customtkinter",
+    "ctktooltip"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/fxngton/foptimizer"
