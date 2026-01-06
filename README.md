@@ -1,5 +1,5 @@
 # fOptimizer
-![Version](https://img.shields.io/badge/version-1.0.0-orange)
+![Version](https://img.shields.io/badge/version-1.2.0-orange)
 ![License](https://img.shields.io/github/license/fxington/foptimizer)
 ![Issues](https://img.shields.io/github/issues/fxington/foptimizer)
 

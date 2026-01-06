@@ -15,7 +15,7 @@ if not exist ".venv\" (
     )
     
     echo [INFO] Upgrading pip...
-    .venv\Scripts\python.exe -m pip install --upgrade pip
+    .venv\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
 )
 
 if exist "pyproject.toml" (
