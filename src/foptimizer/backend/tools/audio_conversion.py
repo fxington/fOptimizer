@@ -38,6 +38,6 @@ def wav_to_ogg(input_file: Path, output_file: Path, quality: int = 5, remove: bo
             input_file.unlink()
 
         return True
-    except Exception:
-        exception_logger(exc=Exception("wav_to_ogg failed"))
+    except Exception as e:
+        exception_logger(e)
         return False

@@ -1,22 +1,22 @@
 [project]
-name = "foptimizer"
-version = "1.1.0"
+name = "fOptimizer"
+version = "1.2.0"
 description = "A Source Engine asset optimization tool for models, textures, and audio."
 readme = "README.md"
-authors = [
-    { name = "foxington" }
-]
+license = {file = "LICENSE"}
+authors = [{ name = "foxington" }]
 requires-python = ">=3.11"
+keywords = ["source-engine", "optimization", "gmod", "vtf", "mdl"]
 dependencies = [
-    "sourcepp",
-    "pyoxipng",
-    "numpy",
-    "customtkinter",
-    "ctktooltip",
+    "sourcepp == 2026.1.3",
+    "pyoxipng == 9.1.1",
+    "numpy == 2.4.0",
+    "customtkinter == 5.2.2",
+    "ctktooltip == 0.8",
 ]
+
+[project.urls]
+Homepage = "https://github.com/fxington/foptimizer"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[project.urls]
-Homepage = "https://github.com/fxngton/foptimizer"
