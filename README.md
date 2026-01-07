@@ -35,9 +35,9 @@ fOptimizer is an open-source project distributed under the MIT license.
 
 ## Credits & Third-Party Tools
 This project utilizes the following incredible tools:
-* [pyoxipng](https://github.com/nfrasser/pyoxipng) - Python wrapper by Nick Frasser (nfrasser) for oxipng, a multithreaded PNG optimizer by Joshua Holmer (shssoichiro).
+* [oxipng](https://github.com/oxipng/oxipng) - Lossless-focused PNG optimizer by Joshua Holmer (shssoichiro).
 * [PNGQuant](https://pngquant.org/) - Lossy PNG compression library and associated CLI by Kornel Lesiński.
-* [oggenc2](https://rarewares.org/) - Ogg Vorbis CLI encoder by RareWares.
+* [oggenc2](https://www.rarewares.org/ogg-oggenc.php) - Ogg Vorbis CLI encoder by RareWares.
 * [SourcePP](https://github.com/craftablescience/sourcepp) - Source engine format parsing library by Laura Lewis (CraftableScience).
 * [Crowbar-Command-Line](https://github.com/UltraTechX/Crowbar-Command-Line) - Source .MDL CLI decompiler by UltraTechX based off of original Crowbar program by ZeqMacaw.
 * [NekoMDL](https://steamcommunity.com/sharedfiles/filedetails/?id=3142607978) - SourceMDL fork with additions and optimizations by nekonacho.

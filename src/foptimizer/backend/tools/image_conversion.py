@@ -13,6 +13,7 @@ if getattr(sys, 'frozen', False):
     BASE_DIR = Path(sys.executable).parent
 else:
     BASE_DIR = Path(__file__).resolve().parent
+OXIPNG_EXE = BASE_DIR / "oxipng" / "oxipng.exe"
 PNGQUANT_EXE = BASE_DIR / "pngquant" / "pngquant.exe"
 
 FOPTIMIZER_FLAG_INDEX = 19
@@ -325,7 +326,7 @@ def resize_vtf(input_file: Path, output_file: Path, w: int, h: int) -> bool:
 
 def optimize_png(input_file: Path, output_file: Path, level: int = 100, lossless: bool = True) -> bool:
     """
-    Optimizes a PNG image using oxipng.
+    Optimizes a PNG image.
     
     :param input_file: The path of the PNG file to optimize.
     :type input_file: Path
@@ -338,18 +339,17 @@ def optimize_png(input_file: Path, output_file: Path, level: int = 100, lossless
     """
     try:
         if lossless:
-            oxipng.optimize(
-                input_file=input_file, 
-                output_file=output_file, 
-                level=round(6/100 * level),
-                force=True,
-                optimize_alpha=True,
-                strip=oxipng.StripChunks.all(),
-                bit_depth_reduction=True,
-                color_type_reduction=True,
-                palette_reduction=True,
-                scale_16=True,
-            )
+            command = [
+                str(OXIPNG_EXE),
+                input_file,
+                "--out", output_file,
+                "--opt", str(round(6/100 * level)),
+                "--preserve",
+                "--strip", "safe",
+            ]
+            subprocess.run(command, check=True, capture_output=True, text=True,
+                            creationflags=subprocess.CREATE_NO_WINDOW)
+            
         else:
             command = [
                 str(PNGQUANT_EXE),
@@ -364,6 +364,7 @@ def optimize_png(input_file: Path, output_file: Path, level: int = 100, lossless
                             creationflags=subprocess.CREATE_NO_WINDOW)
             
         if input_file.stat().st_size <= output_file.stat().st_size:
+            print("input was smaller than output. reverting...")
             try: shutil.copy(input_file, output_file)
             except: pass
         
