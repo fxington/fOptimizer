@@ -311,8 +311,7 @@ def resize_vtf(input_file: Path, output_file: Path, w: int, h: int) -> bool:
         
         original_format = vtf.format
 
-        vtf.set_format(vtfpp.ImageFormat.RGBA32323232F) # will crash without a conversion, but at least uses a lossless format (very memory heavy)
-        vtf.set_size(w, h, vtfpp.ImageConversion.ResizeFilter.NICE) # why do 2:1 (w:h) images crash set_size() unless format is changed?
+        vtf.set_size(w, h, vtfpp.ImageConversion.ResizeFilter.NICE) 
         vtf.set_format(original_format)
 
         vtf.bake_to_file(output_file)
