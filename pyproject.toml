@@ -5,7 +5,7 @@ description = "A Source Engine asset optimization tool for models, textures, and
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [{ name = "foxington" }]
-requires-python = ">=3.11"
+requires-python = ">=3.11, !=3.13.0"
 keywords = ["source-engine", "optimization", "gmod", "vtf", "mdl"]
 dependencies = [
     "sourcepp == 2026.1.3",
