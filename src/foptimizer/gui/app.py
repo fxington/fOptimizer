@@ -22,6 +22,7 @@ DEFAULT_HEIGHT = 600
         "lossless_option": Default/None,
         "level_range" : (Minimum, Maximum, Default),
         "remove_option" : Default/None,
+        "one_click" : bool,
         "function" : backend.logic_function_name,
     },
 """
