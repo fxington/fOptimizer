@@ -39,6 +39,4 @@ This project utilizes the following incredible tools:
 * [PNGQuant](https://pngquant.org/) - Lossy PNG compression library and associated CLI by Kornel Lesiński.
 * [oggenc2](https://www.rarewares.org/ogg-oggenc.php) - Ogg Vorbis CLI encoder by RareWares.
 * [SourcePP](https://github.com/craftablescience/sourcepp) - Source engine format parsing library by Laura Lewis (CraftableScience).
-* [Crowbar-Command-Line](https://github.com/UltraTechX/Crowbar-Command-Line) - Source .MDL CLI decompiler by UltraTechX based off of original Crowbar program by ZeqMacaw.
-* [NekoMDL](https://steamcommunity.com/sharedfiles/filedetails/?id=3142607978) - SourceMDL fork with additions and optimizations by nekonacho.
 * [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) - Modern-look Tkinter wrapper by Tom Schimansky.
