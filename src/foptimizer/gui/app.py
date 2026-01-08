@@ -13,8 +13,8 @@ from foptimizer.backend.tools.misc import get_project_version
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("assets/foptimizer-theme.json")
 
-DEFAULT_WIDTH = 760
-DEFAULT_HEIGHT = 540
+DEFAULT_WIDTH = 800
+DEFAULT_HEIGHT = 600
 
 """
     "Name": {
@@ -28,17 +28,27 @@ DEFAULT_HEIGHT = 540
 
 OPTIMIZATIONS = {
     "Fit Alpha": {
-        "description": "Strip unnecessary channels from VTF images, 'fitting' their formats as exactly as possible.", 
+        "description": "Strip unnecessary channels from VTF images, 'fitting' their formats as exactly as possible.",
         "lossless_option": True,
         "level_range" : None,
         "remove_option" : None,
+        "one_click": True,
         "function" : backend.logic_fit_alpha,
+    },
+    "Remove Duplicate VTFs": {
+        "description": "Collects all duplicate VTF images into a shared directory and redirects VMTs to that single VTF image.\nWARNING: this can only be used on single addons at a time!",
+        "lossless_option": None,
+        "level_range" : None,
+        "remove_option" : None,
+        "one_click": True,
+        "function": backend.logic_remove_duplicate_vtfs,
     },
     "Remove Redundant Files": {
         "description": "Removes files unused by both modern engine branches and modding tools.", 
         "lossless_option": None,
         "level_range" : None,
         "remove_option" : True,
+        "one_click": True,
         "function": backend.logic_remove_unused_files,
     },
     "Shrink Solid Colour Images": {
@@ -46,35 +56,40 @@ OPTIMIZATIONS = {
         "lossless_option": None,
         "level_range" : None,
         "remove_option" : None,
+        "one_click": True,
         "function": backend.logic_shrink_solid,
-    },
-    "PNG Optimization": {
-        "description": "Optimizes PNG images and strips unnecessary metadata.", 
-        "lossless_option": False,
-        "level_range" : (0, 100, 75),
-        "remove_option" : None,
-        "function": backend.logic_optimize_png,
-    },
-    "Halve Normals": {
-        "description": "Halves the dimensions of all normal map VTF images: also encodes a flag to prevent halving the same image twice.", 
-        "lossless_option": None,
-        "level_range" : None,
-        "remove_option" : None,
-        "function": backend.logic_halve_normals,
-    },
-    "WAV to OGG": {
-        "description": "Converts all WAV files to OGG files, trading slight quality loss for a large filesize reduction.\nWARNING: you have to change all references to .wav files to .ogg in code and on maps!", 
-        "lossless_option": None,
-        "level_range" : (-1, 10, 10),
-        "remove_option" : True,
-        "function": backend.logic_wav_to_ogg,
     },
     "Remove Unaccessed VTFs": {
         "description": "Removes all VTF files not referenced by any VMT in the input folder.\nWARNING: this will remove VTF images referenced only in code!",
         "lossless_option": None,
         "level_range" : None,
         "remove_option" : True,
+        "one_click": True,
         "function": backend.logic_remove_unaccessed_vtfs,
+    },
+    "Halve Normals": {
+        "description": "Halves the dimensions of all normal map VTF images: also encodes a flag to prevent halving the same image twice.", 
+        "lossless_option": None,
+        "level_range" : None,
+        "remove_option" : None,
+        "one_click": True,
+        "function": backend.logic_halve_normals,
+    },
+    "PNG Optimization": {
+        "description": "Optimizes PNG images and strips unnecessary metadata.", 
+        "lossless_option": False,
+        "level_range" : (0, 100, 75),
+        "remove_option" : None,
+        "one_click": True,
+        "function": backend.logic_optimize_png,
+    },
+    "WAV to OGG": {
+        "description": "Converts all WAV files to OGG files, trading slight quality loss for a large filesize reduction.\nWARNING: you have to change all references to .wav files to .ogg in code and on maps!", 
+        "lossless_option": None,
+        "level_range" : (-1, 10, 10),
+        "remove_option" : True,
+        "one_click": False,
+        "function": backend.logic_wav_to_ogg,
     },
 }
 
@@ -169,14 +184,14 @@ class OptimizationButton(ctk.CTkFrame):
             if hasattr(i, "remove_check"):
                 i.remove_check.configure(state=state)
 
-    def __init__(self, root, label, description, lossless_option, remove_option, function,
+    def __init__(self, root, label, description, lossless_option, remove_option, function, one_click,
                  input_getter, output_getter, desc_widget: DescriptionLabel, progress_window: ProgressWindow, folder_selection: FolderSelectionFrame, level_range):
         super().__init__(root)
 
         OptimizationButton.buttons.append(self)
 
         self.label = label
-        self.description = description
+        self.description = description + "\n\nOne-Click: This optimization is entirely completed by clicking this button." if one_click else description + "\n\nNOT One-Click: This optimization requires more effort than simply clicking this button."
         self.lossless_option = lossless_option
         self.remove_option = remove_option
         self.function = function
@@ -285,14 +300,14 @@ class OptimizationButton(ctk.CTkFrame):
         self.monitor_button_callback_thread(optimization_thread)
 
     def monitor_button_callback_thread(self, thread):
-            if thread.is_alive():
-                self.after(100, lambda: self.monitor_button_callback_thread(thread))
-            else:
-                self.stop = perf_counter()
-                sec_elapsed = self.stop - self.start
-                self.progress_window.complete(sec_elapsed)
+        if thread.is_alive():
+            self.after(100, lambda: self.monitor_button_callback_thread(thread))
+        else:
+            self.stop = perf_counter()
+            sec_elapsed = self.stop - self.start
+            self.progress_window.complete(sec_elapsed)
 
-                OptimizationButton.set_state_all_instances("normal")
+            OptimizationButton.set_state_all_instances("normal")
 
 
 class AppInfoFrame(ctk.CTkFrame):
@@ -356,6 +371,7 @@ class App(ctk.CTk):
                     description=info["description"],
                     function=info["function"],
                     level_range=info.get("level_range", (float, float)),
+                    one_click=info["one_click"],
                     input_getter=self.input_frame.get_folder,
                     output_getter=self.output_frame.get_folder,
                     desc_widget=self.description_label,
@@ -365,7 +381,7 @@ class App(ctk.CTk):
             
                 btn.grid(row=i + 3, column=0, padx=10, pady=2.5, sticky="ew")
                 self.optimization_buttons[name] = btn
-
+                
 if __name__ == "__main__":
     foptimizer = App()
     foptimizer.mainloop()

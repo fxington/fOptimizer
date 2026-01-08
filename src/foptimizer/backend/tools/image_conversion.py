@@ -16,7 +16,9 @@ OXIPNG_EXE = BASE_DIR / "oxipng" / "oxipng.exe"
 PNGQUANT_EXE = BASE_DIR / "pngquant" / "pngquant.exe"
 
 FOPTIMIZER_FLAG_INDEX = 19
-SUPPORTED_FORMATS = (("DXT5", "DXT3", "DXT1_ONE_BIT_ALPHA"), ("BGRA8888", "RGBA8888", "ABGR8888", "ARGB8888", "BGRX8888"))
+SUPPORTED_FORMATS = (("DXT5", "DXT3", "DXT1_ONE_BIT_ALPHA"),
+                     ("BGRA8888", "RGBA8888", "ABGR8888", "ARGB8888", "BGRX8888")
+)
 
 
 def fit_alpha(input_file: Path, output_file: Path, lossless: bool) -> bool:
@@ -30,9 +32,10 @@ def fit_alpha(input_file: Path, output_file: Path, lossless: bool) -> bool:
     :return: Whether the function completed successfully.
     :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
 
     try:
+        vtf = vtfpp.VTF(input_file)
+        
         format_name = vtf.format.name
         if format_name in SUPPORTED_FORMATS[0]:
             return fit_dxt(input_file=input_file, output_file=output_file, lossless=lossless)
@@ -56,9 +59,10 @@ def fit_8888(input_file: Path, output_file: Path) -> bool:
     :return: Whether the function completed successfully.
     :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
 
     try:
+        vtf = vtfpp.VTF(input_file)
+        
         if vtf.format.name not in SUPPORTED_FORMATS[1]:
             try: shutil.copy(input_file, output_file)
             except: pass
@@ -162,9 +166,10 @@ def fit_dxt(input_file: Path, output_file: Path, lossless: bool) -> bool:
     :return: Whether the function completed successfully.
     :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
 
     try:
+        vtf = vtfpp.VTF(input_file)
+        
         if vtf.format.name not in SUPPORTED_FORMATS[0]:
             try: shutil.copy(input_file, output_file)
             except: pass
@@ -229,9 +234,10 @@ def is_normal_vtf(input_file: Path) -> bool:
     :return: Whether the VTF image appears to be a normal/bump map.
     :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
 
     try:
+        vtf = vtfpp.VTF(input_file)
+        
         input_file_name = input_file.stem.lower()
         if "bump" in input_file_name or input_file_name.endswith("_n"):
             return True
@@ -262,19 +268,20 @@ def shrink_solid(input_file: Path, output_file: Path) -> bool:
     :return: Whether the function completed successfully.
     :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
 
     try:
+        vtf = vtfpp.VTF(input_file)
+        
         image_data = vtf.get_image_data_as_rgba8888()
         pixels = np.frombuffer(image_data, dtype=np.uint8).reshape(-1, 4)
         is_solid = np.all(pixels == pixels[0], axis=0).all()
 
         if is_solid:
-            vtf.set_size(width=4,
-                         height=4,
-                         filter=vtfpp.ImageConversion.ResizeFilter.NICE
+            resize_vtf(input_file=input_file,
+                       output_file=output_file,
+                       w=4,
+                       h=4
             )
-            vtf.bake_to_file(output_file)
         else:
             try: shutil.copy(input_file, output_file)
             except: pass
@@ -300,19 +307,19 @@ def resize_vtf(input_file: Path, output_file: Path, w: int, h: int) -> bool:
     :return: Whether the function completed successfully.
     :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
 
     try:
+        vtf = vtfpp.VTF(input_file)
 
-        if (vtf.width == w) and (vtf.height == h):
+        if(vtf.width == w and vtf.height == h) or (w < 1 or h < 1):
             try: shutil.copy(input_file, output_file)
             except: pass
             return True
         
         vtf.set_size(w, h, vtfpp.ImageConversion.ResizeFilter.NICE)
         vtf.bake_to_file(output_file)
-
         return True
+
     except Exception as e:
         exception_logger(e)
         return False
@@ -376,10 +383,13 @@ def halve_normal(input_file: Path, output_file: Path) -> bool:
     :type input_file: Path
     :param output_file: The path of the resized VTF to be written to.
     :type output_file: Path
+    :return: Whether the function completed successfully.
+    :rtype: bool
     """
-    vtf = vtfpp.VTF(input_file)
     
     try:
+        vtf = vtfpp.VTF(input_file)
+        
         # checking halve_normal flag against vtf.flags bitmask
         if is_normal_vtf(input_file) and not (vtf.flags & (1 << FOPTIMIZER_FLAG_INDEX)):
             width = max(4, vtf.width // 2)
@@ -395,3 +405,5 @@ def halve_normal(input_file: Path, output_file: Path) -> bool:
     except Exception as e:
         exception_logger(e)
         return False
+
+

@@ -4,6 +4,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from .tools.remove_redundancies import remove_unused_files, remove_unaccessed_vtfs
 from .tools.image_conversion import optimize_png, fit_alpha, shrink_solid, halve_normal
 from .tools.audio_conversion import wav_to_ogg
+from .tools.patcher import remove_duplicate_vtfs
 
 def _universal_worker(tool_func, src: Path, dst: Path, ext: tuple[str], **kwargs):
     dst.parent.mkdir(parents=True, exist_ok=True)
@@ -100,4 +101,10 @@ def logic_remove_unused_files(input_dir: Path, output_dir: Path, remove: bool, p
                         output_dir=output_dir,
                         remove=remove,
                         progress_window=progress_window
+    )
+
+def logic_remove_duplicate_vtfs(input_dir: Path, output_dir: Path, progress_window=None):
+    remove_duplicate_vtfs(input_dir=input_dir,
+                          output_dir=output_dir,
+                          progress_window=progress_window
     )
