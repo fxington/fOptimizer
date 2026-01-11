@@ -4,25 +4,6 @@ from pathlib import Path
 from .misc import exception_logger, fop_copy
 from .patcher import get_vmt_dependencies, get_head_directories
 
-VMT_PARAMS = (
-    "$basetexture", "$basetexture2", "$basetexture3", "$bumpmap", 
-    "$bumpmap2", "$ssbump", "$normalmap", "$normalmap2", "$detail", 
-    "$detail2", "$lightwarptexture", "$envmap", "$envmapmask", 
-    "$envmapmask2", "$selfillummask", "$phongexponenttexture", 
-    "$phongwarptexture", "$phongexponent2texture", "$tintmasktexture", 
-    "$ambientocclusiontexture", "$blendmodulatetexture", "$tooltexture", 
-    "$fresnelrangestexture", "$emissiveblendtexture", 
-    "$emissiveblendbasetexture", "$emissiveblendflowcustomtexture", 
-    "$fleshinteriortexture", "$fleshinteriornoisetexture", 
-    "$fleshbordertexture1d", "$fleshcubetexture", "$fleshnormaltexture", 
-    "$fleshsubsurfacetexture", "$displaceallowance", "$parallaxmap", 
-    "$masks1", "$masks2", "$maskstexture", "$iris", "$corneatexture",
-    "$fresneltexture", "$warptexture", "$flowmap", "$blendmask",
-    "$painttexture", "$detailblendmask", "$reflecttexture",
-    "$refracttexture", "$refracttinttexture", "$bottommaterial",
-    "$underwateroverlay", "$backlighttexture", "$displacementmap",
-    "$ambientoccltexture", 
-)
 
 FILE_BLACKLIST = (
     "*.360.vtx",

@@ -6,14 +6,14 @@ from .misc import exception_logger, fop_copy
 
 
 VMT_PARAMS = (
-    "$basetexture", "$basetexture2", "$basetexture3", "$bumpmap", 
+    "$basetexture", "$basetexture2", "$basetexture3", "$basetexture4", "$bumpmap", 
     "$bumpmap2", "$ssbump", "$normalmap", "$normalmap2", "$detail", 
     "$detail2", "$lightwarptexture", "$envmap", "$envmapmask", 
     "$envmapmask2", "$selfillummask", "$phongexponenttexture", 
     "$phongwarptexture", "$phongexponent2texture", "$tintmasktexture", 
     "$ambientocclusiontexture", "$blendmodulatetexture", "$tooltexture", 
     "$fresnelrangestexture", "$emissiveblendtexture", 
-    "$emissiveblendbasetexture", "$emissiveblendflowcustomtexture", 
+    "$emissiveblendbasetexture", "$emissiveblendflowtexture", 
     "$fleshinteriortexture", "$fleshinteriornoisetexture", 
     "$fleshbordertexture1d", "$fleshcubetexture", "$fleshnormaltexture", 
     "$fleshsubsurfacetexture", "$displaceallowance", "$parallaxmap", 
@@ -22,11 +22,19 @@ VMT_PARAMS = (
     "$painttexture", "$detailblendmask", "$reflecttexture",
     "$refracttexture", "$refracttinttexture", "$bottommaterial",
     "$underwateroverlay", "$backlighttexture", "$displacementmap",
-    "$ambientoccltexture", 
+    "$ambientoccltexture", "$specmasktexture", "$fresnelwarptexture",
+    "$opacitytexture", "$blendmap", "$blendmap2", "$texture2", "%tooltexture",
+    "$flow_noise_texture", "$paintsplatnormalmap", "$paintsplatbubblelayout",
+    "$paintsplatbubble", "$paintenvmap", "$basenormalmap2", "$basenormalmap3",
+    "$basenormalmap4", "$dudvmap", "$spitternoisetexture", "$scenedepth",
+    "$ramptexture", "$gradienttexture", "$cloudalphatexture",
+    "$corecolortexture", "$detail1", "$detail2", "$flowbounds",
+    "$masks", "$selfillummap", "$decaltexture", "$lightmap", "$compress",
+    "$stretch", "$texture1", "$texture3", "$colorbar", "$stripetexture",
 )
 
 VMT_REGEX = re.compile(
-    r'\"?(' + '|'.join(re.escape(p) for p in VMT_PARAMS) + r')\"?\s+\"([^"]+)\"', 
+    r'\"?(' + '|'.join(re.escape(p) for p in VMT_PARAMS) + r')\"?\s+\"([^"]+)\"',
     re.IGNORECASE
 )
 
