@@ -37,6 +37,8 @@ def fop_copy(src: Path, dst: Path, mode: int = 1) -> bool:
             
     except FileExistsError:
         pass
+    except shutil.SameFileError:
+        pass
     except Exception as e:
         exception_logger(e)
 
