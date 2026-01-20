@@ -1,5 +1,6 @@
-import traceback
+import os
 import shutil
+import traceback
 from pathlib import Path
 
 import tomllib
@@ -42,9 +43,13 @@ def fop_copy(src: Path, dst: Path, mode: int = 1) -> bool:
         exception_logger(e)
 
 
-def dir_size_bytes(dir: Path) -> int:
-    total = 0
-    for f in dir.rglob("*"):
-        if f.is_file():
-            total += f.stat().st_size
-    return total
+def size_bytes(input_path: Path) -> int:
+    if(input_path.is_dir()):
+        _helper = lambda input_dir: sum(f.stat().st_size
+                                        if f.is_file()
+                                        else _helper(f.path)
+                                        for f in os.scandir(input_dir)
+                                    )
+        return _helper(input_path)
+    else:
+        return input_path.stat().st_size

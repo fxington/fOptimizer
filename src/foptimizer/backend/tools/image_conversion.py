@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 from sourcepp import vtfpp
 
-from .misc import exception_logger, fop_copy
+from .misc import exception_logger, fop_copy, size_bytes
 
 if getattr(sys, "frozen", False):
     BASE_DIR = Path(sys.executable).parent
@@ -359,7 +359,7 @@ def optimize_png(
     """
     try:
         input_file_cache = io.BytesIO(input_file.read_bytes())
-        input_file_size = input_file.stat().st_size
+        input_file_size = size_bytes(input_file)
         
         if lossless:
             command = [
@@ -402,7 +402,7 @@ def optimize_png(
                 creationflags=subprocess.CREATE_NO_WINDOW,
             )
 
-        if input_file_size <= output_file.stat().st_size:
+        if input_file_size <= size_bytes(output_file):
             with open(output_file, 'wb') as f_out:
                 f_out.write(input_file_cache.getvalue())
 

@@ -8,7 +8,7 @@ import customtkinter as ctk
 from CTkToolTip import CTkToolTip as tip
 
 import foptimizer.backend.logic as backend
-from foptimizer.backend.tools.misc import dir_size_bytes, get_project_version
+from foptimizer.backend.tools.misc import size_bytes, get_project_version
 
 
 ctk.set_appearance_mode("dark")
@@ -242,7 +242,7 @@ class ProgressWindow(ctk.CTkFrame):
         self.input_dir = input_dir
         self.output_dir = output_dir
 
-        self.start_size = dir_size_bytes(input_dir)
+        self.start_size = size_bytes(input_dir)
         self.error_text = None
         self.start_time = perf_counter()
 
@@ -262,7 +262,7 @@ class ProgressWindow(ctk.CTkFrame):
         self.perftime = round(self.end_time - self.start_time, 2)
 
         if self.input_dir == self.output_dir:
-            self.end_size = dir_size_bytes(self.output_dir)
+            self.end_size = size_bytes(self.output_dir)
             self.diff_size = self.start_size - self.end_size
             self.total_saved += self.diff_size
 
