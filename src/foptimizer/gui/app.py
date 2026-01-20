@@ -15,7 +15,7 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("assets/foptimizer-theme.json")
 
 DEFAULT_WIDTH = 800
-DEFAULT_HEIGHT = 640
+DEFAULT_HEIGHT = 700
 
 """
     "Name": {
@@ -135,6 +135,18 @@ OPTIMIZATIONS = {
         "remove_option": True,
         "one_click": False,
         "function": backend.logic_wav_to_ogg,
+    },
+    "Crush to DXT": {
+        "description": (
+            "Crushes absolutely every image "
+            "to DXT1/5 appropriately."
+            "\nWARNING: Inherently lossy."
+        ),
+        "lossless_option": None,
+        "level_range": None,
+        "remove_option": None,
+        "one_click": True,
+        "function": backend.logic_crush_to_dxt,
     },
 }
 

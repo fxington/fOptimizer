@@ -41,7 +41,7 @@ def fit_alpha(input_file: Path, output_file: Path, lossless: bool) -> bool:
         format_name = vtf.format.name
         if format_name in SUPPORTED_FORMATS[0]:
             return fit_dxt(
-                input_file=input_file, output_file=output_file, lossless=lossless
+                input_file=input_file, output_file=output_file, lossless=lossless, crush_dxt=False
             )
         elif format_name in SUPPORTED_FORMATS[1]:
             return fit_8888(input_file=input_file, output_file=output_file)
@@ -163,7 +163,7 @@ def fit_8888(input_file: Path, output_file: Path) -> bool:
         return False
 
 
-def fit_dxt(input_file: Path, output_file: Path, lossless: bool) -> bool:
+def fit_dxt(input_file: Path, output_file: Path, lossless: bool, crush_dxt: bool) -> bool:
     """
     Encodes the best alpha format for a DXT-encoded VTF image "losslessly."
 
@@ -178,7 +178,7 @@ def fit_dxt(input_file: Path, output_file: Path, lossless: bool) -> bool:
     try:
         vtf = vtfpp.VTF(input_file)
 
-        if vtf.format.name not in SUPPORTED_FORMATS[0]:
+        if vtf.format.name not in SUPPORTED_FORMATS[0] and not(crush_dxt):
             fop_copy(src=input_file, dst=output_file, mode=1)
             return True
 
@@ -449,3 +449,23 @@ def halve_normal(input_file: Path, output_file: Path) -> bool:
     except Exception as e:
         exception_logger(e)
         return
+
+
+def crush_to_dxt(input_file: Path, output_file: Path) -> bool:
+    """
+    Encodes the best DXT alpha format for all VTF images lossily.
+
+    :param input_file: The path of the VTF to determine the optimal DXT alpha format for.
+    :type input_file: Path
+    :param output_file: The path of the VTF file to write to.
+    :type output_file: Path
+    :return: Whether the function completed successfully.
+    :rtype: bool
+    """
+    
+    vtf = vtfpp.VTF(input_file)
+    if(vtf.format.name in ("BGRA8888", "RGBA16161616", "RGBA16161616F")):
+        fop_copy(src=input_file, dst=output_file)
+        return True
+    
+    fit_dxt(input_file=input_file, output_file=output_file, lossless=False, crush_dxt=True)
