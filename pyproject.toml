@@ -8,7 +8,7 @@ authors = [{ name = "foxington" }]
 requires-python = ">=3.11, !=3.13.0"
 keywords = ["source-engine", "optimization", "gmod", "vtf", "mdl"]
 dependencies = [
-    "audioop-lts == 0.2.2",
+    "audioop-lts == 0.2.2; python_version >= '3.13'",
     "ctkgradient == 0.3.2",
     "ctktooltip == 0.8",
     "customtkinter == 5.2.2",

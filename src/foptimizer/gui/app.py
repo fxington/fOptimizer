@@ -263,7 +263,7 @@ class OptimizationOption(ctk.CTkButton):
         if self.info["warning"]:
             self.warn = ctk.CTkLabel(
                 self.display_frame,
-                text=f"WARNING: {self.info["warning"]}",
+                text=f"WARNING: {self.info['warning']}",
                 justify="left",
                 anchor="w",
             )
@@ -299,7 +299,7 @@ class OptimizationOption(ctk.CTkButton):
 
         self.apply_btn = ctk.CTkButton(
             self.display_frame,
-            text=f"Apply Optimization: {self.info["name"]}",
+            text=f"Apply Optimization: {self.info['name']}",
             height=40,
             fg_color="transparent",
             border_width=1,

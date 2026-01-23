@@ -57,3 +57,8 @@ This project utilizes the following incredible tools:
 * [oggenc2](https://www.rarewares.org/ogg-oggenc.php) - Ogg Vorbis CLI encoder by RareWares.
 * [SourcePP](https://github.com/craftablescience/sourcepp) - Source engine format parsing library by Laura Lewis (CraftableScience).
 * [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) - Modern-look Tkinter wrapper by Tom Schimansky.
+
+## Common Installation Issues
+* I'm getting the error: <br>ImportError: DLL load failed while importing _sourcepp_impl: The specified module could not be found.<br>
+
+SourcePP requires that a version of the Microsoft Visual C++ Redistributables be installed on your system. You can find a list of them [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version).
