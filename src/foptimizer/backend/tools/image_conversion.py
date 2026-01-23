@@ -23,7 +23,11 @@ SUPPORTED_FORMATS = (
 )
 
 
-def fit_alpha(input_file: Path, output_file: Path, lossless: bool) -> bool:
+def fit_alpha(
+    input_file: Path,
+    output_file: Path,
+    lossless: bool,
+) -> bool:
     """
     Encodes the best alpha format for a supported encoding-encoded VTF image losslessly.
 
@@ -53,7 +57,10 @@ def fit_alpha(input_file: Path, output_file: Path, lossless: bool) -> bool:
         return False
 
 
-def fit_8888(input_file: Path, output_file: Path) -> bool:
+def fit_8888(
+    input_file: Path,
+    output_file: Path,
+) -> bool:
     """
     Encodes the best alpha format for a 8888 prefix-encoded VTF image losslessly.
 
@@ -163,7 +170,11 @@ def fit_8888(input_file: Path, output_file: Path) -> bool:
         return False
 
 
-def fit_dxt(input_file: Path, output_file: Path, lossless: bool) -> bool:
+def fit_dxt(
+    input_file: Path,
+    output_file: Path,
+    lossless: bool,
+) -> bool:
     """
     Encodes the best alpha format for a DXT-encoded VTF image "losslessly."
 
@@ -261,14 +272,18 @@ def is_normal_vtf(input_file: Path) -> bool:
 
         avg_mag = np.mean(magnitudes)
 
-        # threshold can be adjusted as some images can be misinterpreted as being majority normal data
+        # threshold can be adjusted as images can be misinterpreted as being normal data
         return 0.85 <= avg_mag <= 1.1
     except Exception as e:
         exception_logger(e)
         return False
 
 
-def shrink_solid(input_file: Path, output_file: Path) -> bool:
+def shrink_solid(
+    input_file: Path,
+    output_file: Path,
+    override_flags: bool = False,
+) -> bool:
     """
     Shrinks a solid-colour VTF into a 4x4 equivalent.
 
@@ -287,7 +302,11 @@ def shrink_solid(input_file: Path, output_file: Path) -> bool:
         pixels = np.frombuffer(image_data, dtype=np.uint8).reshape(-1, 4)
         is_solid = np.all(pixels == pixels[0], axis=0).all()
 
-        if is_solid and not vtf.flags & 1 << FOPTIMIZER_SHRINK_INDEX:
+        if (
+            is_solid
+            and (not vtf.flags & 1 << FOPTIMIZER_SHRINK_INDEX)
+            or override_flags
+        ):
             resize_vtf(
                 input_file=input_file,
                 output_file=output_file,
@@ -305,7 +324,11 @@ def shrink_solid(input_file: Path, output_file: Path) -> bool:
 
 
 def resize_vtf(
-    input_file: Path, output_file: Path, width: int, height: int, flag_index: int = None
+    input_file: Path,
+    output_file: Path,
+    width: int,
+    height: int,
+    flag_index: int = None,
 ) -> bool:
     """
     Resizes and writes a VTF image.
@@ -342,7 +365,10 @@ def resize_vtf(
 
 
 def optimize_png(
-    input_file: Path, output_file: Path, level: int = 100, lossless: bool = True
+    input_file: Path,
+    output_file: Path,
+    level: int = 100,
+    lossless: bool = True,
 ) -> bool:
     """
     Optimizes a PNG image.
@@ -360,7 +386,7 @@ def optimize_png(
     try:
         input_file_cache = io.BytesIO(input_file.read_bytes())
         input_file_size = size_bytes(input_file)
-        
+
         if lossless:
             command = [
                 str(OXIPNG_EXE),
@@ -403,7 +429,7 @@ def optimize_png(
             )
 
         if input_file_size <= size_bytes(output_file):
-            with open(output_file, 'wb') as f_out:
+            with open(output_file, "wb") as f_out:
                 f_out.write(input_file_cache.getvalue())
 
         return True
@@ -412,9 +438,15 @@ def optimize_png(
         return False
 
 
-def halve_normal(input_file: Path, output_file: Path) -> bool:
+def shrink_normal(
+    input_file: Path,
+    output_file: Path,
+    multiplier: int = 2,
+    clamp: tuple[int, int] = [0, 0],
+    override_flags: bool = False,
+) -> bool:
     """
-    Halves the dimensions of a VTF image if it is interpreted as a normal map.
+    Shrinks the dimensions of a VTF image if it is interpreted as a normal map.
     Limited to a minimum of 4x4 pixels.
 
     :param input_file: The path of the VTF to be resized.
@@ -429,11 +461,13 @@ def halve_normal(input_file: Path, output_file: Path) -> bool:
         vtf = vtfpp.VTF(input_file)
 
         # checking halve_normal flag against vtf.flags bitmask
-        if is_normal_vtf(input_file) and not (
-            vtf.flags & (1 << FOPTIMIZER_HALVE_INDEX)
+        if (
+            is_normal_vtf(input_file)
+            and not (vtf.flags & (1 << FOPTIMIZER_HALVE_INDEX))
+            or override_flags
         ):
-            width = max(4, vtf.width // 2)
-            height = max(4, vtf.height // 2)
+            width = max(4, vtf.width // multiplier, clamp[0])
+            height = max(4, vtf.height // multiplier, clamp[1])
 
             resize_vtf(
                 input_file=input_file,

@@ -14,7 +14,10 @@ FILE_BLACKLIST = (
 
 
 def remove_unused_files(
-    input_dir: Path, output_dir: Path, remove: bool, progress_window=None
+    input_dir: Path,
+    output_dir: Path,
+    remove: bool,
+    progress_window=None,
 ) -> bool:
     """
     Copies used files to output_dir while skipping unused legacy formats.
@@ -66,7 +69,10 @@ def remove_unused_files(
 
 
 def remove_unaccessed_vtfs(
-    input_dir: Path, output_dir: Path, remove: bool = False, progress_window=None
+    input_dir: Path,
+    output_dir: Path,
+    remove: bool = False,
+    progress_window=None,
 ) -> bool:
     """
     Scans for VTF files not referenced by any VMT in the directory tree.

@@ -1,11 +1,10 @@
 import hashlib
 import re
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import as_completed, ThreadPoolExecutor
 from pathlib import Path
-from tkinter import filedialog
-from time import perf_counter
 
 from sourcepp import vpkpp
+from tkinter import filedialog
 
 from .misc import exception_logger, fop_copy
 
@@ -111,7 +110,10 @@ VMT_REGEX = re.compile(
 vpk_files = set()
 
 
-def get_head_directories(input_dir: Path, target_dir: str) -> tuple[Path]:
+def get_head_directories(
+    input_dir: Path,
+    target_dir: str,
+) -> tuple[Path]:
     """
     Computes a tuple of Paths who are the heads of directories i.e. materials/ folder.
 
@@ -225,7 +227,9 @@ def get_vmt_dependencies(vmt_dir: Path) -> dict:
 
 
 def remove_duplicate_vtfs(
-    input_dir: Path, output_dir: Path, progress_window=None
+    input_dir: Path,
+    output_dir: Path,
+    progress_window=None,
 ) -> bool:
     """
     Scans for exactly identical duplicate VTF files, moves them to a shared directory,
@@ -343,7 +347,11 @@ def remove_duplicate_vtfs(
         return False
 
 
-def _remove_vpk_files_worker(f_path: Path, input_dir: Path, output_dir: Path):
+def _remove_vpk_files_worker(
+    f_path: Path,
+    input_dir: Path,
+    output_dir: Path,
+):
     try:
         if not f_path.is_file():
             return None
@@ -370,7 +378,10 @@ def _remove_vpk_files_worker(f_path: Path, input_dir: Path, output_dir: Path):
 
 
 def remove_vpk_files(
-    input_dir: Path, output_dir: Path, vpk_dir: Path = None, progress_window=None
+    input_dir: Path,
+    output_dir: Path,
+    vpk_dir: Path = None,
+    progress_window=None,
 ):
     try:
         if not input_dir.is_dir():

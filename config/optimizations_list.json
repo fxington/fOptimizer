@@ -1,0 +1,174 @@
+{
+  "REMOVE_VPK_CONTENT": {
+    "name": "Remove Base Game Content",
+    "description": "Removes all content from the input folder which are already included in the selected game's base content. (VPKs)",
+    "warning": null,
+    "parameters": []
+  },
+  "DEDUPLICATE_VTF": {
+    "name": "Remove Duplicate VTFs",
+    "description": "Collects all duplicate VTF images into a shared directory and redirects VMTs to that single VTF image.",
+    "warning": null,
+    "parameters": []
+  },
+  "FIT_ALPHA_VTF": {
+    "name": "Fit Alpha",
+    "description": "Strip unnecessary channels from VTF images, fitting their formats as exactly as possible.",
+    "warning": null,
+    "parameters": [
+      {
+        "type": "checkbox",
+        "id": "lossless",
+        "label": "Lossless",
+        "tip": "Preserves data wherever possible.",
+        "default": true
+      }
+    ]
+  },
+  "REMOVE_REDUNDANT_CONTENT": {
+    "name": "Remove Redundant Files",
+    "description": "Removes files unused by both modern engine branches and modding tools.",
+    "warning": null,
+    "parameters": [
+      {
+        "type": "checkbox",
+        "id": "remove",
+        "label": "Remove Files from Input Folder",
+        "tip": "Deletes redundant files from the input folder instead of moving useful files to the output folder.",
+        "default": true
+      }
+    ]
+  },
+  "SHRINK_SOLID_VTF": {
+    "name": "Shrink Solid Colour VTFs",
+    "description": "Shrinks all solid-colour VTFs to a minimum resolution, keeping its usage identical but filesize minimal. Encodes a flag to skip already-shrunk images.",
+    "warning": null,
+    "parameters": [
+      {
+        "type": "checkbox",
+        "id": "override_flags",
+        "label": "Override Flags",
+        "tip": "Attempts to processes VTFs which have already had their flags set.",
+        "default": false
+      }
+    ]
+  },
+  "REMOVE_UNACCESSED_VTF": {
+    "name": "Remove Unaccessed VTFs",
+    "description": "Removes all VTF files not referenced by any VMT in the input folder.",
+    "warning": "This will remove VTF images referenced only in code.",
+    "parameters": [
+      {
+        "type": "checkbox",
+        "id": "remove",
+        "label": "Remove VTFs from Input Folder",
+        "tip": "Deletes unaccessed VTFs instead of moving them to the output.",
+        "default": true
+      }
+    ]
+  },
+  "OPTIMIZE_PNG": {
+    "name": "Optimize PNGs",
+    "description": "Optimizes PNG images and strips unnecessary metadata.",
+    "warning": null,
+    "parameters": [
+      {
+        "type": "slider",
+        "id": "level",
+        "label": "PNG Compression",
+        "tip": "Higher is slower, but smaller and better-quality.",
+        "min": 0,
+        "max": 100,
+        "default": 75
+      },
+      {
+        "type": "checkbox",
+        "id": "lossless",
+        "label": "Lossless",
+        "tip": "Preserves data wherever possible.",
+        "default": false
+      }
+    ]
+  },
+  "STEREO_TO_MONO_WAV": {
+    "name": "Stereo WAV to Mono",
+    "description": "Maps all stereo WAVs' two channels to a single mono channel, halving filesize. May fix broken directionality, such as all sounds having a uniform volume in both ears regardless of directionality.",
+    "warning": null,
+    "parameters": [
+      {
+        "type": "checkbox",
+        "id": "remove",
+        "label": "Remove stereo WAVs from Input Folder",
+        "tip": "Deletes stereo WAVs from the input folder instead of moving the mono WAVs to the output folder.",
+        "default": true
+      }
+    ]
+  },
+  "SHRINK_NORMAL_VTF": {
+    "name": "Shrink Normals",
+    "description": "Shrinks the dimensions of all normal map VTF images. Encodes a flag to skip already-shrunk images.",
+    "warning": null,
+    "parameters": [
+      {
+        "type": "checkbox",
+        "id": "override_flags",
+        "label": "Override fOptimizer Flags",
+        "tip": "Attempts to processes VTFs which have already had their flags set.",
+        "default": false
+      },
+      {
+        "type": "int_input",
+        "id": "multiplier",
+        "label": "Multiplier",
+        "tip": "The amount of times to shrink each normal by (2x = half, 4x = quarter). Must be a power of 2.",
+        "min": 2,
+        "max": null,
+        "default": 2,
+        "power_of_two": true
+      },
+      {
+        "type": "int_input",
+        "id": "clamp_w",
+        "label": "Clamp Width",
+        "tip": "The minimum width in pixels a shrunk VTF can be.",
+        "min": 4,
+        "max": 8192,
+        "default": 4,
+        "power_of_two": true
+      },
+      {
+        "type": "int_input",
+        "id": "clamp_h",
+        "label": "Clamp Height",
+        "tip": "The minimum height in pixels a shrunk VTF can be.",
+        "min": 4,
+        "max": 8192,
+        "default": 4,
+        "power_of_two": true
+      }
+    ]
+  },
+  "WAV_TO_OGG": {
+    "name": "WAV to OGG",
+    "description": "Converts all WAV files to OGG files for large filesize reduction.",
+    "warning": "All references to WAV files in code and on maps must be manually updated to fit the OGG extension.",
+    "parameters": [
+      {
+        "type": "slider",
+        "id": "level",
+        "label": "OGG Quality",
+        "tip": "Higher is slower, but results in smaller and better-quality.",
+        "min": -1,
+        "max": 10,
+        "default": 10
+      },
+      {
+        "type": "checkbox",
+        "id": "remove",
+        "label": "Remove WAVs from Input Folder",
+        "tip": "Deletes WAVs from the input folder instead of moving the OGGs to the output folder.",
+        "default": true
+      }
+    ]
+  }
+}

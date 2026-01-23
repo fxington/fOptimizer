@@ -1,6 +1,6 @@
 <div align="center">
 
-# fOptimizer <br> ![Progress Bar](assets/progress_bar_looponce.gif)
+# fOptimizer <br> ![Progress Bar](assets/progress_bar_looponce.png)
 
 [![Version](https://img.shields.io/github/v/release/fxington/fOptimizer?color=orange)](https://github.com/fxington/foptimizer/releases)
 ![License](https://img.shields.io/github/license/fxington/foptimizer)
