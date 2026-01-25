@@ -1,6 +1,6 @@
 import os
 import shutil
-import tomllib
+import tomli
 import traceback
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -23,7 +23,7 @@ def get_project_version():
     try:
         path = Path(__file__).parent.parent.parent.parent.parent / "pyproject.toml"
         with open(path, "rb") as f:
-            data = tomllib.load(f)
+            data = tomli.load(f)
             return data["project"]["version"]
     except Exception:
         return "0.0.0 (unknown)"

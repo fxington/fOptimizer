@@ -31,7 +31,7 @@ fOptimizer for Windows can be downloaded via the
 
 Unzip the .zip archive, then run **start_foptimizer.bat** to install dependencies into a virtual environment and initialize the GUI.
 
-The earliest officially-supported Python version is **3.11**.
+The earliest officially-supported Python version is **3.10**.
 
 ## Usage
 
