@@ -2,9 +2,9 @@ import hashlib
 import re
 from concurrent.futures import as_completed, ThreadPoolExecutor
 from pathlib import Path
+from tkinter import filedialog
 
 from sourcepp import vpkpp
-from tkinter import filedialog
 
 from .misc import exception_logger, fop_copy
 
@@ -135,7 +135,7 @@ def get_head_directories(
         for p in input_dir.rglob("*"):
             if p.is_dir() and p.name.lower() == target_name:
                 occurrence_count = sum(1 for part in p.parts if part.lower() == target_name)
-                
+
                 if occurrence_count == 1:
                     found_heads.add(p)
 
@@ -259,7 +259,8 @@ def remove_duplicate_vtfs(
         if not materials_roots:
             if progress_window:
                 progress_window.error(
-                    "Remove Duplicate VTFs failed: No 'materials/' subfolders found in input folder."
+                    "Remove Duplicate VTFs failed: "
+                    "No 'materials/' subfolders found in input folder."
                 )
             return False
 
@@ -383,6 +384,20 @@ def remove_vpk_files(
     vpk_dir: Path = None,
     progress_window=None,
 ):
+    """
+    Scans and removes all files with identical relative paths to those in VPK content.
+
+    :param input_dir: The absolute path of the directory to remove duplicate content from.
+    :type input_dir: Path
+    :param output_dir: If specified, the absolute path of the
+                       directory to copy the files already in VPK archives to.
+    :type output_dir: Path
+    :param vpk_dir: The absolute path of the directory
+                    to recursively search for and collect VPK archives from. 
+    :type vpk_dir: Path
+    :return: Whether the function completed successfully.
+    :rtype: bool
+    """
     try:
         if not input_dir.is_dir():
             if progress_window:

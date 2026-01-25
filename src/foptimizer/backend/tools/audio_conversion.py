@@ -73,8 +73,8 @@ def wav_stereo_to_mono(
     :type input_file: Path
     :param output_file: The WAV file to write to.
     :type output_file: Path
-    :param remove: True if the function should remove the stereo WAV from the input directory instead
-        of copying the mono to the output directory.
+    :param remove: True if the function should remove the stereo WAV from the input directory
+                   instead of copying the mono to the output directory.
     :return: Whether the function completed successfully.
     :rtype: bool
     """
@@ -85,7 +85,7 @@ def wav_stereo_to_mono(
         if input_wav.channels == 2:
             mono_wav = input_wav.set_channels(1)
             mono_wav.export(output_file, format="wav")
-            
+
             if remove and input_file != output_file:
                 input_file.unlink()
         else:

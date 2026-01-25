@@ -11,9 +11,13 @@ import pywinstyles as pywin
 from CTkToolTip import CTkToolTip as tip
 
 from foptimizer.backend.logic import ALIASES
-from foptimizer.backend.tools.misc import size_bytes, get_project_version, interp_hex_color
+from foptimizer.backend.tools.misc import (
+    size_bytes,
+    get_project_version,
+    interp_hex_color,
+)
 
-with open("config/optimizations_list.json") as opt_json:
+with open("config/optimizations_list.json", encoding="utf-8") as opt_json:
     OPTIMIZATIONS = json.load(opt_json)
 
 ctk.set_appearance_mode("dark")
@@ -101,7 +105,7 @@ class FolderSelectionFrame(ctk.CTkFrame):
                 border_color=self.border_color, placeholder_text=self.placeholder_text
             ),
         )
-    
+
     def set_state(self, state: str):
         self.field.configure(state=state)
         self.browse_button.configure(state=state)
@@ -124,6 +128,9 @@ class ProgressWindow(ctk.CTkFrame):
 
         self.progress_text = ctk.CTkLabel(self, text="0 of 0 files processed")
         self.progress_text.grid(row=1, column=0, padx=0, pady=(10, 0), sticky="ew")
+
+        self.input_dir = None
+        self.output_dir = None
 
         self.start_size = 0
         self.end_size = 0
@@ -272,7 +279,7 @@ class OptimizationOption(ctk.CTkButton):
         line = ctk.CTkFrame(self.display_frame, height=2, fg_color="#4e5255")
         line.pack(fill="x", padx=20, pady=0)
 
-        if self.info["parameters"]:  
+        if self.info["parameters"]:
             self.options_header = ctk.CTkLabel(
                 self.display_frame,
                 text="Options",
@@ -322,7 +329,7 @@ class OptimizationOption(ctk.CTkButton):
         checkbox.pack(anchor="w", pady=(10, 5))
         self.params_values[p["id"]] = var
         tip(checkbox, p["tip"])
-        
+
         OptimizationOption.params.append(checkbox)
 
     def _build_slider(self, p):
@@ -330,8 +337,10 @@ class OptimizationOption(ctk.CTkButton):
         header_frame.pack(fill="x")
 
         ctk.CTkLabel(header_frame, text=p["label"]).pack(side="left")
-        
-        value_label = ctk.CTkLabel(header_frame, text=str(p["default"]), text_color="#ffffff")
+
+        value_label = ctk.CTkLabel(
+            header_frame, text=str(p["default"]), text_color="#ffffff"
+        )
         value_label.pack(side="right")
 
         var = ctk.IntVar(value=p["default"])
@@ -348,9 +357,9 @@ class OptimizationOption(ctk.CTkButton):
         slider.pack(fill="x", pady=(0, 10))
         self.params_values[p["id"]] = var
         tip(slider, p["tip"])
-        
+
         OptimizationOption.params.append(slider)
-    
+
     def _build_int_input(self, p):
         ctk.CTkLabel(self.options_container, text=p["label"]).pack(anchor="w")
 
@@ -362,9 +371,9 @@ class OptimizationOption(ctk.CTkButton):
         entry.pack(fill="x", pady=5)
         self.params_values[p["id"]] = var
         tip(entry, p["tip"])
-        
+
         entry.bind("<FocusOut>", lambda e: self._validate_int_entry(var, p))
-        
+
         OptimizationOption.params.append(entry)
 
     def _validate_int_entry(self, var, p):
@@ -382,7 +391,7 @@ class OptimizationOption(ctk.CTkButton):
             val = min(p_max, val)
 
         if p.get("power_of_two"):
-            if not((val > 0) and (val & (val - 1) == 0)):
+            if not ((val > 0) and (val & (val - 1) == 0)):
                 val = p["default"]
 
         var.set(str(val))
@@ -396,12 +405,12 @@ class OptimizationOption(ctk.CTkButton):
 
     def execute_optimization(self):
         input_dir = self.input_folder_frame.get_folder()
-        if not (input_dir):
+        if not input_dir:
             self.input_folder_frame.on_empty()
             return
 
         output_dir = self.output_folder_frame.get_folder()
-        if not (output_dir):
+        if not output_dir:
             output_dir = input_dir
 
         input_dir = Path(input_dir)
@@ -443,14 +452,14 @@ class OptimizationOption(ctk.CTkButton):
         if not self.display_frame.winfo_viewable():
             return
 
-        target_width = event.width - 40 # 20px+20px padding
+        target_width = event.width - 40  # 20px+20px padding
 
         if target_width > 0:
             self.header.configure(wraplength=target_width)
             self.desc.configure(wraplength=target_width)
             if self.warn:
                 self.warn.configure(wraplength=target_width)
-    
+
     def set_state_critical(self, state: str):
         OptimizationOption.set_state_all_instances(state=state)
         self.apply_btn.configure(state=state)
