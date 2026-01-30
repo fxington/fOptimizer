@@ -2,7 +2,7 @@ from pathlib import Path
 
 from .tools.audio_conversion import wav_to_ogg, wav_stereo_to_mono
 from .tools.deduplication import remove_duplicate_vtfs, remove_vpk_files
-from .tools.image_conversion import fit_alpha, optimize_png, shrink_normal, shrink_solid
+from .tools.image_conversion import convert_to_dxt, fit_alpha, optimize_png, shrink_normal, shrink_solid
 from .tools.remove_redundancies import remove_unaccessed_vtfs, remove_unused_files
 from .tools.misc import handle_batch_parallel
 
@@ -158,6 +158,21 @@ def logic_wav_stereo_to_mono(
         opt_func=wav_stereo_to_mono,
         progress_window=progress_window,
         remove=remove,
+    )
+    
+    
+@register("CONVERT_TO_DXT")
+def logic_convert_to_dxt(
+    input_dir: Path,
+    output_dir: Path,
+    progress_window=None,
+):
+    handle_batch_parallel(
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ext=("vtf", "vtf"),
+        opt_func=convert_to_dxt,
+        progress_window=progress_window,
     )
 
 

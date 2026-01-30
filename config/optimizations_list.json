@@ -148,6 +148,12 @@
       }
     ]
   },
+  "CONVERT_TO_DXT": {
+    "name": "Convert to DXT",
+    "description": "Converts all textures to DXT format for maximum filesize reduction.",
+    "warning": "This is inherently and unavoidably lossy; however, image quality is rarely visibly degraded.",
+    "parameters": []
+  },
   "WAV_TO_OGG": {
     "name": "WAV to OGG",
     "description": "Converts all WAV files to OGG files for large filesize reduction.",

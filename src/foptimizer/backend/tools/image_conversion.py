@@ -18,9 +18,10 @@ PNGQUANT_EXE = BASE_DIR / "pngquant" / "pngquant.exe"
 FOPTIMIZER_HALVE_INDEX = 19
 FOPTIMIZER_SHRINK_INDEX = 20
 SUPPORTED_FORMATS = (
-    ("DXT5", "DXT3", "DXT1_ONE_BIT_ALPHA"),
-    ("BGRA8888", "RGBA8888", "ABGR8888", "ARGB8888", "BGRX8888"),
+    ("DXT5", "DXT3", "DXT1_ONE_BIT_ALPHA"), # fit_dxt
+    ("BGRA8888", "RGBA8888", "ABGR8888", "ARGB8888", "BGRX8888"), #fit_8888
 )
+UNSUPPORTED_FORMATS = ("DXT1", "RGBA16161616", "RGBA16161616F", "UV88", "UVLX8888", "UVWQ8888", "A8") # these cant be reasonably encoded into a different format without breaking the image, or increasing filesize to do so
 
 
 def fit_alpha(
@@ -92,12 +93,6 @@ def fit_8888(
 
         # free: always applicable due to waste, no checks needed
         free_8888 = {"BGRX8888": "BGR888"}
-
-        # where are these even used lol
-        dudv_8888 = {
-            "UVLX8888": "UV88",
-            "UVWQ8888": "UV88",
-        }
 
         format_name = vtf.format.name
         is_alpha = format_name in alpha_8888
@@ -478,6 +473,72 @@ def shrink_normal(
             )
         else:
             fop_copy(src=input_file, dst=output_file, mode=1)
+
+        return True
+    except Exception as e:
+        exception_logger(e)
+        return
+
+
+def convert_to_dxt(
+    input_file: Path,
+    output_file: Path,
+) -> bool:
+    """
+    Converts an applicable non DXT-encoded image into an appropriate DXT format.
+
+    :param input_file: The path of the VTF to be converted.
+    :type input_file: Path
+    :param output_file: The path of the converted VTF to be written to.
+    :type output_file: Path
+    :return: Whether the function completed successfully.
+    :rtype: bool
+    """
+    try:
+        vtf = vtfpp.VTF(input_file)
+
+        format_name = vtf.format.name
+        if format_name in UNSUPPORTED_FORMATS:
+            fop_copy(src=input_file, dst=output_file, mode=1)
+            return True
+        
+        translucent = False
+        bi_trans = False
+
+        for i in range(vtf.frame_count):
+            vtf.set_format(vtfpp.ImageFormat.DXT5)
+
+            original_rgba = np.frombuffer(
+                vtf.get_image_data_as_rgba8888(frame=i), dtype=np.uint8
+            ).copy()
+            alpha = original_rgba[3::4]
+
+            if np.all(alpha == 0):
+                # stops images with fully transparent alpha channels
+                # (for specularity?) being exported completely black
+                fop_copy(src=input_file, dst=output_file, mode=1)
+                return True
+
+            if np.any((alpha > 0) & (alpha < 255)):
+                translucent = True
+                break
+
+            if np.any(alpha == 0):
+                bi_trans = True
+
+        if translucent:
+            vtf.set_format(vtfpp.ImageFormat.DXT5)
+        elif bi_trans:
+            vtf.set_format(vtfpp.ImageFormat.DXT1_ONE_BIT_ALPHA)
+        else:
+            vtf.set_format(vtfpp.ImageFormat.DXT1)
+
+        vtf.bake_to_file(output_file)
+        return True
+
+    except Exception as e:
+        exception_logger(e)
+        return False
 
         return True
     except Exception as e:

@@ -1,6 +1,6 @@
 [project]
 name = "fOptimizer"
-version = "2.0.2"
+version = "2.0.4"
 description = "A Source Engine asset optimization tool for models, textures, and audio."
 readme = "README.md"
 license = {file = "LICENSE"}
