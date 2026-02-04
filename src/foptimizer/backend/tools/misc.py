@@ -49,14 +49,16 @@ def fop_copy(
 
 
 def size_bytes(input_path: Path) -> int:
-    if input_path.is_dir():
+    if input_path.exists() and input_path.is_dir():
         _helper = lambda input_dir: sum(
             f.stat().st_size if f.is_file() else _helper(f.path)
             for f in os.scandir(input_dir)
         )
         return _helper(input_path)
-    else:
+    elif input_path.exists() and input_path.is_file():
         return input_path.stat().st_size
+    else:
+        print(f"Path does not exist: {input_path}")
 
 
 def _universal_worker(
